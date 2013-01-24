@@ -110,4 +110,7 @@ class SQLAnywhere::SQLAnywhereInterface
 
   # http://dcx.sybase.com/1200/en/dbprogramming/programming-sacpp-sacapi-h-fil-sqlany-num-params-met.html
   attach_function :sqlany_num_params, [:pointer], :int
+
+  # http://dcx.sybase.com/1200/en/dbprogramming/programming-sacpp-sacapi-h-fil-sqlany-affected-rows-met.html
+  attach_function :sqlany_affected_rows, [:pointer], :int
 end
