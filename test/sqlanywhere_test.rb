@@ -68,9 +68,7 @@ class SQLAnywhere_Test < Test::Unit::TestCase
     assert_nothing_raised do
       SQLAnywhere::API.sqlany_initialize_interface( @api )
     end
-    assert_nothing_raised do
-      @api.sqlany_init()
-    end
+    assert_equal 1, @api.sqlany_init(), 'sqlany_init() not successful'
     @conn = @api.sqlany_new_connection()
     assert_not_nil @conn
     conn_str = "eng=test;uid=dba;pwd=sql"
@@ -322,7 +320,18 @@ class SQLAnywhere_Test < Test::Unit::TestCase
 
   def test_insert_real
     assert_insert("_real_", 3.402823e+38, Float, 1e+32)
-  end  
+  end
+  
+  def test_fork
+    @api.sqlany_disconnect(@conn)
+    @api.sqlany_free_connection(@conn)
+    @api.sqlany_fini()
+    fork do
+      setup
+      teardown
+    end
+    setup
+  end
 
   def is_iq_table?(table_name)
 	rs = @api.sqlany_execute_direct(@conn, "SELECT server_type FROM SYS.SYSTABLE WHERE table_name = '#{table_name}'")
